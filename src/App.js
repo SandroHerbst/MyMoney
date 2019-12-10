@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useReducer} from 'react'
 
 import axios from 'axios'
 
@@ -20,19 +20,36 @@ axios
 
 const url = 'https://mymoney-herbst.firebaseio.com/movimentacoes/2019-08.json'
 
+// função pura
+const reducer = (state, action) => {
+  // manipular meu estado
+  if (action.type === 'REQUEST') {
+    return {
+      ...state,
+      loading: true
+    }
+  }
+  if (action.type === 'SUCCESS') {
+    return {
+      ...state,
+      loading: false,
+      data: action.data
+    }
+  }
+  return state
+}
+
 function App() {
-  const [data, setData] = useState({
+  const [data, dispatch] = useReducer(reducer, {
     loading: true,
     data: {}
   })
   useEffect(() => {
+    dispatch({type: 'REQUEST'})
     axios
       .get(url)
       .then(res => {
-        setData({
-          loading: false,
-          data: res.data
-        })
+        dispatch({type: 'SUCCESS', data: res.data})
       })
   }, [])
 
