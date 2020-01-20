@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useReducer, useEffect } from 'react'
+import { useReducer } from 'react'
 
 // função pura
 const reducer = (state, action) => {
