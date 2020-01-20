@@ -1,6 +1,10 @@
 import React from 'react'
 
 import useGet from './useGet'
+import usePost from './usePost'
+import useDelete from './useDelete'
+
+//import axios from 'axios'
 
 /*
 axios
@@ -24,12 +28,29 @@ const url2 = 'http://httpbin.org/ip'
 function App() {
   const data = useGet(url)
   const data2 = useGet(url2)
+
+  const [postData, post] = usePost(url)
+  const [deleteData, remove] = useDelete()
+
+  const doRemove = () => {
+    remove('https://mymoney-herbst.firebaseio.com/movimentacoes/2019-08/-Lz3BzSVV5BdXKmz_o5t.json')
+  }
+
+  const saveNew = () => {
+    post({valor:10, descricao: 'olá'})
+  }
+
+
   return (
     <div>
       <h1>My Money</h1>
       {JSON.stringify(data)}
       {data.loading && <p>Carregando</p>}
       <pre>{JSON.stringify(data2)}</pre>
+      <button onClick={saveNew}>Salvar</button>
+      <pre>{JSON.stringify(postData)}</pre>
+      <button onClick={doRemove}>Deletar</button>
+      <pre>{JSON.stringify(deleteData)}</pre>
     </div>
   )
 }
