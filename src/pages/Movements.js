@@ -6,6 +6,7 @@ const { useGet, usePost, useDelete } = Rest(baseUrl)
 
 const Movements = ({match}) => {
     const data = useGet(`movimentacoes/${match.params.date}`)
+    const dataMonths = useGet(`meses/${match.params.date}`)
     const [postData, salvar] = usePost(`movimentacoes/${match.params.date}`)
     const [removeData, remover] = useDelete()
 
@@ -21,6 +22,10 @@ const Movements = ({match}) => {
         setValor(event.target.value)
     }
 
+    const sleep = time => new Promise(
+        resolve => setTimeout(resolve, time)
+    )
+
     const salvarMovimentacao = async(e) => {
         e.preventDefault()
 
@@ -32,17 +37,32 @@ const Movements = ({match}) => {
             setDescricao('')
             setValor('')
             data.refetch()
+            await sleep(500)
+            dataMonths.refetch()
         }
     }
 
     const removerMovimentacao = async(id) => {
         await remover(`movimentacoes/${match.params.date}/${id}`)
         data.refetch()
+        await sleep(500)
+        dataMonths.refetch()
     }
 
     return (
         <div className='container'>
             <h1>Movimentações</h1>
+            {
+                !dataMonths.loading && 
+                    <div>
+                        Previsão entrada: {dataMonths.data.previsao_ent} / Previsão saída: {dataMonths.data.previsao_sai} 
+                        <br/>
+                        Entradas: {dataMonths.data.entradas} / Saídas: {dataMonths.data.saidas} 
+                        <br/>
+
+                        <pre>{JSON.stringify(dataMonths)}</pre>
+                    </div>                    
+            }    
             <table className="table">
                 <thead>
                     <tr>
