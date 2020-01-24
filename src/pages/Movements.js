@@ -37,6 +37,7 @@ const Movements = ({match}) => {
             })        
             setDescricao('')
             setValor('')
+            await sleep(500)
             data.refetch()
             await sleep(500)
             dataMonths.refetch()
@@ -45,18 +46,17 @@ const Movements = ({match}) => {
 
     const removerMovimentacao = async(id) => {
         await remover(`movimentacoes/${match.params.date}/${id}`)
+        await sleep(500)
         data.refetch()
         await sleep(500)
         dataMonths.refetch()
     }
 
     const alterarPrevisaoEntrada = (evt) => {
-        //console.log(evt.target.value)
         patch(`meses/${match.params.date}`, { previsao_ent: evt.target.value})
     }    
 
     const alterarPrevisaoSaida = (evt) => {
-        //console.log(evt.target.value)
         patch(`meses/${match.params.date}`, { previsao_sai: evt.target.value})
     }    
 
@@ -64,14 +64,13 @@ const Movements = ({match}) => {
         <div className='container'>
             <h1>Movimentações</h1>
             {
-                !dataMonths.loading && 
+                !dataMonths.loading && dataMonths.data &&
                     <div>
                         Previsão entrada: {dataMonths.data.previsao_ent} <input type='text' onBlur={alterarPrevisaoEntrada}/> / Previsão saída: {dataMonths.data.previsao_sai}  <input type='text' onBlur={alterarPrevisaoSaida}/>
                         <br/>
                         Entradas: {dataMonths.data.entradas} / Saídas: {dataMonths.data.saidas} 
                         <br/>
-
-                        <pre>{JSON.stringify(dataMonths)}</pre>
+                        
                     </div>                    
             }    
             <table className="table">
